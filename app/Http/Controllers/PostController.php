@@ -61,8 +61,8 @@ class PostController extends Controller
     public function index()
     {
 
-        $posts = Post::latest()->get();
-     
+       $posts = Post::with('author')->orderBy('created_at', 'desc')->get();
+        
         return view('dashboard', compact('posts'));
     }
     // method die de post neemt en in een nieuwe detail page zet
