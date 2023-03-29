@@ -37,7 +37,7 @@ class PostController extends Controller
     $cache_buster = '?v=' . time();
 
     // Redirect to the dashboard with the cache-busting parameter
-    return redirect('/dashboard' . $cache_buster);
+    return redirect('/' . $cache_buster);
     }   
     // add posts form
     public function submit(Request $request)
@@ -55,7 +55,7 @@ class PostController extends Controller
         $cache_buster = '?v=' . time();
 
         // Redirect to the dashboard with the cache-busting parameter
-        return redirect('/dashboard' . $cache_buster);
+        return redirect('/' . $cache_buster);
     }
 
     public function index()
