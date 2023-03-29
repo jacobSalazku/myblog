@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LoginController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +20,7 @@ use App\Http\Controllers\CommentController;
 
 Route::get('/', [PostController::class, 'index'])->name('posts.dashboard');
 Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.showpost');
+Route::get('/login', [LoginController::class, 'login']);
 
 Route::middleware('auth')->group(function () {
 
@@ -31,9 +34,7 @@ Route::middleware('auth')->group(function () {
 
 });
 
-Route::get('/login', function () {
-  return view('auth.login');
-});
+
 
 require __DIR__.'/auth.php'; 
 ?>
