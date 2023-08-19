@@ -5,18 +5,44 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Comment;
+use illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
+
+    public function deleteComment(Comment $comment)
+    {
+        // Assuming you have an authorization mechanism to check if the user can delete the comment.
+        // For example, you can check if the authenticated user is the comment's author before allowing the deletion.
+        if (auth()->check() && auth()->user()->id === $comment->user_id) {
+            // Delete the comment.
+            $comment->delete();
+        } else {
+            // If the user is not authorized to delete the comment, you can return a response indicating the error.
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        // Optionally, you can redirect the user back to the post after deleting the comment.
+        return redirect()->route('posts.showpost', ['post' => $comment->post]);
+    }
+
+    public function comment(Request $request, Post $post)
+    {
+        $user = Auth::user();
+
+        $comment = new Comment();
+        $comment->content = $request->comment_content;
+        $comment->user_id = $user->id;
+        $comment->username = $user->name;   
+
+        $post->comments()->save($comment);
+
+        return redirect()->route('posts.showpost', $post);
+    }
     
     public function like(Post $post)
     {
 
-        //checks if the user has already liked the message by seeing if a record exists 
-       // in the like table with both the ID of the message and the ID of the current user.
-    //If the user has already liked the message, the code removes the corresponding like 
-    //record from the like table. Otherwise, it creates a new like record in the like table
-    // with the ID of the user and the ID of the message.
         if ($post->likes()->where('user_id', auth()->id())->exists()) {
             $post->likes()->where('user_id', auth()->id())->delete();
         } else {
@@ -39,6 +65,8 @@ class PostController extends Controller
     // Redirect to the dashboard with the cache-busting parameter
     return redirect('/' . $cache_buster);
     }   
+
+    
     // add posts form
     public function submit(Request $request)
     {
@@ -61,8 +89,8 @@ class PostController extends Controller
     public function index()
     {
 
-       $posts = Post::with('author')->orderBy('created_at', 'desc')->get();
-        
+        $posts = Post::with('author')->orderBy('created_at', 'desc')->get();
+     
         return view('dashboard', compact('posts'));
     }
     // method die de post neemt en in een nieuwe detail page zet
@@ -73,5 +101,6 @@ class PostController extends Controller
     }
 
 
+    
     
 }

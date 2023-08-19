@@ -37,9 +37,10 @@
                 </div>
             </div>
         @endif 
-          
-        @foreach ($posts as $post)
+        
+    @foreach ($posts as $post)
     <div class="py-12">
+   
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="p-6 text-gray-900 dark:text-gray-100">
             <span class=" dark:text-gray-100">By {{ $post->author->name }}</span>
